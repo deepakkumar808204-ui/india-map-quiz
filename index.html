@@ -368,29 +368,83 @@ fetch('INDIA_STATES.geojson')
 
                     click: function(e) {
 
-                        /* Highlight */
+    /* Highlight selected state */
 
-                        e.target.setStyle(
-                            selectedStyle
-                        );
-
-
-                        /* Show name below map */
-
-                        document
-                            .getElementById(
-                                'selectedPlace'
-                            )
-                            .textContent = name;
+    e.target.setStyle(
+        selectedStyle
+    );
 
 
-                        document
-                            .getElementById(
-                                'message'
-                            )
-                            .textContent =
-                            'You selected: ' +
-                            name;
+    /* Show selected state */
+
+    document
+        .getElementById(
+            'selectedPlace'
+        )
+        .textContent = name;
+
+
+    /* =========================
+       CHECK QUIZ ANSWER
+       ========================= */
+
+    if (currentQuestion === "") {
+
+        document
+            .getElementById(
+                'message'
+            )
+            .textContent =
+            'Press Start Quiz first.';
+
+        return;
+    }
+
+
+    /* CORRECT ANSWER */
+
+    if (name === currentQuestion) {
+
+        score++;
+
+        document
+            .getElementById(
+                'score'
+            )
+            .textContent =
+            'Score: ' + score;
+
+        document
+            .getElementById(
+                'quizStatus'
+            )
+            .textContent =
+            '✅ Correct!';
+
+
+        /* Next question after 1 second */
+
+        setTimeout(function() {
+
+            nextQuestion();
+
+        }, 1000);
+
+    }
+
+
+    /* WRONG ANSWER */
+
+    else {
+
+        document
+            .getElementById(
+                'quizStatus'
+            )
+            .textContent =
+            '❌ Wrong! Try again.';
+
+    }
 
                     }
 
