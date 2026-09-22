@@ -403,7 +403,7 @@ fetch('INDIA_STATES.geojson')
 
     /* CORRECT ANSWER */
 
-    if (name === currentQuestion) {
+    if (cleanStateName(name) === currentQuestion) {
 
         score++;
 
@@ -526,7 +526,26 @@ const statesQuiz = [
 
 let currentQuestion = "";
 let score = 0;
+function cleanStateName(name) {
 
+    const nameMap = {
+
+        "Orissa": "Odisha",
+        "NCT of Delhi": "Delhi",
+        "Delhi": "Delhi",
+        "Jammu & Kashmir": "Jammu and Kashmir",
+        "Jammu and Kashmir": "Jammu and Kashmir",
+        "Andaman & Nicobar": "Andaman and Nicobar Islands",
+        "Andaman and Nicobar": "Andaman and Nicobar Islands",
+        "Pondicherry": "Puducherry",
+        "Pondicherry (UT)": "Puducherry",
+        "Dadra and Nagar Haveli": "Dadra and Nagar Haveli and Daman and Diu"
+
+    };
+
+    return nameMap[name] || name;
+
+}
 document
     .getElementById("startQuiz")
     .addEventListener("click", function() {
