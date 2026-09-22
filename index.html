@@ -124,7 +124,7 @@ L.tileLayer(
     }
 ).addTo(map);
 
-fetch('india.geojson')
+fetch('INDIA_STATES.geojson')
     .then(response => response.json())
     .then(data => {
 
@@ -157,11 +157,7 @@ fetch('india.geojson')
 
                     click: function() {
 
-                        let name =
-                            feature.properties.NAME_2 ||
-                            feature.properties.NAME_1 ||
-                            feature.properties.name ||
-                            "Selected area";
+                        let name = feature.properties.STATE || "Selected area";
 
                         alert("You selected: " + name);
 
