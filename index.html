@@ -1,161 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>India Map Quiz</title>
+<title>India Map Quiz - UPSC</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7fa;
-            color: #172033;
-        }
+<style>
 
-        .header {
-            background: #ffffff;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .flag {
-            font-size: 45px;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    color: #172033;
+}
 
-        h1 {
-            margin: 8px 0 4px;
-            font-size: 28px;
-        }
+.header {
+    background: white;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 
-        .subtitle {
-            color: #667085;
-            margin: 0;
-        }
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+}
 
-        .container {
-            max-width: 700px;
-            margin: auto;
-            padding: 25px 18px;
-        }
+.header p {
+    margin: 6px 0 0;
+    color: #666;
+}
 
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+.menu {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    background: white;
+}
 
-        .card h2 {
-            margin-top: 0;
-        }
+.menu button {
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    background: #e9eef5;
+    font-weight: bold;
+    white-space: nowrap;
+}
 
-        .category {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+.menu button.active {
+    background: #172033;
+    color: white;
+}
 
-        button {
-            border: none;
-            border-radius: 14px;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: bold;
-            background: #eef2f7;
-            color: #172033;
-        }
+#map {
+    height: 65vh;
+    width: 100%;
+}
 
-        button:active {
-            transform: scale(0.97);
-        }
+.info {
+    background: white;
+    padding: 15px;
+    text-align: center;
+}
 
-        .start {
-            width: 100%;
-            background: #1d7a46;
-            color: white;
-            margin-top: 20px;
-        }
+.info h2 {
+    margin: 5px 0;
+}
 
-        .footer {
-            text-align: center;
-            color: #98a2b3;
-            font-size: 13px;
-            margin-top: 30px;
-        }
-    </style>
+.info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+</style>
 </head>
 
 <body>
 
-    <div class="header">
+<div class="header">
+    <h1>🇮🇳 India Map Quiz</h1>
+    <p>UPSC Geography Practice</p>
+</div>
 
-        <div class="flag">🇮🇳</div>
+<div class="menu">
 
-        <h1>India Map Quiz</h1>
+    <button class="active">States & UTs</button>
+    <button>Rivers</button>
+    <button>Mountains</button>
+    <button>Passes</button>
+    <button>Tiger Reserves</button>
+    <button>Ramsar Sites</button>
 
-        <p class="subtitle">
-            UPSC Geography Practice
-        </p>
+</div>
 
-    </div>
+<div id="map"></div>
 
+<div class="info">
+    <h2>India Geography Quiz</h2>
+    <p>Tap an area on the map to explore it.</p>
+</div>
 
-    <div class="container">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-        <div class="card">
+<script>
 
-            <h2>Choose a category</h2>
+const map = L.map('map').setView([22.5, 79], 5);
 
-            <div class="category">
+L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        attribution: '&copy; OpenStreetMap contributors'
+    }
+).addTo(map);
 
-                <button>🇮🇳 States</button>
+fetch('india.geojson')
+    .then(response => response.json())
+    .then(data => {
 
-                <button>🌊 Rivers</button>
+        L.geoJSON(data, {
 
-                <button>⛰️ Mountains</button>
+            style: {
+                color: '#172033',
+                weight: 1,
+                fillColor: '#dce6f2',
+                fillOpacity: 0.7
+            },
 
-                <button>🏔️ Passes</button>
+            onEachFeature: function(feature, layer) {
 
-                <button>🐅 Tiger Reserves</button>
+                layer.on({
 
-                <button>🌿 Ramsar Sites</button>
+                    mouseover: function(e) {
+                        e.target.setStyle({
+                            weight: 2,
+                            fillOpacity: 0.9
+                        });
+                    },
 
-            </div>
+                    mouseout: function(e) {
+                        e.target.setStyle({
+                            weight: 1,
+                            fillOpacity: 0.7
+                        });
+                    },
 
-            <button class="start">
-                START QUIZ
-            </button>
+                    click: function() {
 
-        </div>
+                        let name =
+                            feature.properties.NAME_2 ||
+                            feature.properties.NAME_1 ||
+                            feature.properties.name ||
+                            "Selected area";
 
+                        alert("You selected: " + name);
 
-        <div class="card">
+                    }
 
-            <h2>Coming Soon</h2>
+                });
 
-            <p>🎯 Training Mode</p>
-            <p>⏱️ Timed Quiz</p>
-            <p>🏆 Score & Streaks</p>
-            <p>📚 UPSC Current Affairs</p>
+            }
 
-        </div>
+        }).addTo(map);
 
+    })
 
-        <div class="footer">
+    .catch(error => {
+        console.log(error);
+        alert("Map data could not be loaded.");
+    });
 
-            India Map Quiz • UPSC Preparation
-
-        </div>
-
-    </div>
+</script>
 
 </body>
 </html>
